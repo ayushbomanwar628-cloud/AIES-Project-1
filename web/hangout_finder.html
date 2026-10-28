@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bangalore Hangout Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12181B; --bg-elev:#1B2327; --bg-card:#202A2E; --border:#2C383C;
+  --accent:#F2A93B; --accent-ink:#12181B; --accent2:#4FA98C; --danger:#E2645A;
+  --text:#EDEAE3; --text-dim:#9BA6A3;
+  --font-display:'Sora',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#F6F4EF; --bg-elev:#FFFFFF; --bg-card:#FFFFFF; --border:#E2DFD6;
+    --text:#1B211F; --text-dim:#666F6C; --accent-ink:#1B211F;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#F6F4EF; --bg-elev:#FFFFFF; --bg-card:#FFFFFF; --border:#E2DFD6;
+  --text:#1B211F; --text-dim:#666F6C; --accent-ink:#1B211F;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:var(--font-display);margin:0;}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px;}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand h1{font-size:19px;font-weight:600;letter-spacing:-.01em;}
+.brand p{margin:2px 0 0;font-size:12.5px;color:var(--text-dim);}
+.modes{display:flex;background:var(--bg-elev);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;}
+.modes button{border:none;background:none;color:var(--text-dim);font-family:var(--font-body);font-weight:600;font-size:13.5px;padding:8px 16px;border-radius:8px;cursor:pointer;transition:background .15s,color .15s;}
+.modes button.active{background:var(--accent);color:var(--accent-ink);}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start;}
+@media (max-width:820px){.grid{grid-template-columns:1fr;}}
+.panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-dim);margin-bottom:8px;text-transform:none;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-family:var(--font-body);font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:100px;cursor:pointer;transition:.15s;}
+.chip:hover{border-color:var(--accent);}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+select,input[type=number]{width:100%;background:var(--bg-card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;font-family:var(--font-body);font-size:13.5px;}
+.member{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--bg-card);}
+.member-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.member-head input{background:transparent;border:none;color:var(--text);font-family:var(--font-display);font-weight:600;font-size:14px;padding:0;width:70%;}
+.member-head input:focus{outline:none;}
+.rm{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;}
+.rm:hover{color:var(--danger);}
+.addmember{width:100%;border:1px dashed var(--border);background:none;color:var(--text-dim);border-radius:8px;padding:9px;font-family:var(--font-body);font-size:13px;cursor:pointer;font-weight:600;}
+.addmember:hover{border-color:var(--accent);color:var(--accent);}
+.go{width:100%;margin-top:6px;background:var(--accent);color:var(--accent-ink);border:none;border-radius:9px;padding:13px;font-family:var(--font-display);font-weight:600;font-size:14.5px;cursor:pointer;}
+.go:hover{opacity:.9;}
+.tabs{display:flex;gap:6px;margin-bottom:16px;}
+.tabs button{border:1px solid var(--border);background:var(--bg-elev);color:var(--text-dim);font-family:var(--font-body);font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:8px;cursor:pointer;}
+.tabs button.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+.results-head{margin-bottom:14px;}
+.results-head h2{font-size:17px;font-weight:600;}
+.results-head p{margin:3px 0 0;font-size:13px;color:var(--text-dim);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media (max-width:600px){.cards{grid-template-columns:1fr;}}
+.card{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.card h3{font-size:15px;font-weight:600;margin-bottom:4px;}
+.card .cat{font-size:11.5px;color:var(--accent2);font-weight:600;margin-bottom:8px;}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.tag{font-size:10.5px;padding:3px 8px;border-radius:100px;background:var(--bg-card);color:var(--text-dim);border:1px solid var(--border);}
+.venues{font-size:12px;color:var(--text-dim);border-top:1px solid var(--border);padding-top:9px;margin-top:2px;}
+.venues b{color:var(--text);font-weight:500;}
+.bars{display:flex;flex-direction:column;gap:4px;margin-top:10px;}
+.bar-row{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--text-dim);}
+.bar-row span.name{width:52px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;height:5px;background:var(--bg-card);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--accent2);}
+.empty{color:var(--text-dim);font-size:13.5px;padding:40px 20px;text-align:center;border:1px dashed var(--border);border-radius:12px;}
+.note{font-size:11.5px;color:var(--text-dim);margin-top:16px;line-height:1.6;}
+.cloud-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;border:1px solid var(--border);text-transform:none;}
+.version-badge{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700;}
+.cloud-badge{background:var(--bg-card);color:var(--accent2);border-color:rgba(79,169,140,0.3);}
+.student-badge{background:var(--bg-card);color:var(--text-dim);}
+.health-badge{background:rgba(79,169,140,0.15);color:var(--accent2);border-color:var(--accent2);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="brand-mark">🧭</div>
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <h1>Hangout Finder</h1>
+        <span class="badge version-badge">v{{APP_VERSION}}</span>
+      </div>
+      <p>Mood + budget matched activities, Bangalore</p>
+      <div class="cloud-bar">
+        <span class="badge cloud-badge">AWS EC2 · Kubernetes Minikube · NodePort 30007</span>
+        <span class="badge student-badge">Ayush Bomanwar (PRN: 1262243601)</span>
+        <span id="health-pill" class="badge health-badge">● Health: UP</span>
+      </div>
+    </div>
+  </div>
+  <div class="modes">
+    <button id="mode-solo" class="active">Solo</button>
+    <button id="mode-group">Group</button>
+  </div>
+</header>
+
+<div class="grid">
+  <div class="panel">
+    <div class="field" id="mood-field">
+      <label>Mood</label>
+      <div class="chips" id="mood-chips"></div>
+    </div>
+    <div class="field">
+      <label>Interested in (optional)</label>
+      <div class="chips" id="cat-chips"></div>
+    </div>
+    <div class="field">
+      <label>Budget</label>
+      <select id="budget">
+        <option value="0">Free</option>
+        <option value="1">Low (up to ~₹300)</option>
+        <option value="2" selected>Medium (up to ~₹1000)</option>
+        <option value="3">High (up to ~₹2500)</option>
+        <option value="4">No limit</option>
+      </select>
+    </div>
+    <div class="field" id="groupsize-field">
+      <label>Group size</label>
+      <input type="number" id="groupsize" value="2" min="1" max="10">
+    </div>
+    <div class="field" id="members-field" style="display:none;">
+      <label>Members</label>
+      <div id="members"></div>
+      <button class="addmember" id="add-member">+ Add member</button>
+    </div>
+    <button class="go" id="go">Find activities</button>
+  </div>
+
+  <div>
+    <div id="tabs-wrap" style="display:none;" class="tabs">
+      <button class="active" data-strat="average">Average</button>
+      <button data-strat="least_misery">Least Misery</button>
+      <button data-strat="borda">Borda Count</button>
+    </div>
+    <div class="results-head">
+      <h2 id="res-title">Pick a mood to get started</h2>
+      <p id="res-sub">Filters by budget and group size, ranks by how well activities match the mood(s) you pick.</p>
+    </div>
+    <div id="results"><div class="empty">Your matches will show up here.</div></div>
+    <p class="note">Sample venues are real Bangalore places pulled from Zomato + OpenStreetMap, shown as examples — not distance-filtered. Solo mode ranks by mood/interest overlap; Group mode compares three ways of combining everyone's preferences: Average (best for the whole group on balance), Least Misery (nobody ends up truly unhappy), and Borda Count (rank-based voting across members).</p>
+  </div>
+</div>
+</div>
+
+<script>
+const ACTIVITIES = [{"n":"Try North Indian food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Byg Brewski Brewing Company","Street Storyss"]},{"n":"Try Chinese food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Biergarten","The Fatty Bao"]},{"n":"Try South Indian food","c":"food","m":["relaxed","social"],"ct":"low","e":"low","io":"indoor","gmax":8,"v":["CTR Shri Sagar","Brahmin's Coffee Bar"]},{"n":"Try Biryani food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Bombay Brasserie","Barbeque Nation"]},{"n":"Try Continental food","c":"food","m":["relaxed","social"],"ct":"high","e":"low","io":"indoor","gmax":8,"v":["Windmills Craftworks","Biergarten"]},{"n":"Try Mughlai food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Barbeque Nation","1131 Bar + Kitchen"]},{"n":"Try Seafood food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Mainland China","Karavalli - The Gateway Hotel"]},{"n":"Try Italian food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Windmills Craftworks","Bologna"]},{"n":"Try Andhra food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Nagarjuna","Meghana Foods"]},{"n":"Try Cafe food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Truffles","Brik Oven"]},{"n":"Try Desserts food","c":"food","m":["relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Burma Burma","Windmills Craftworks"]},{"n":"Try Street Food food","c":"food","m":["relaxed","social"],"ct":"low","e":"low","io":"indoor","gmax":8,"v":["AB's - Absolute Barbecues","Bombay Brasserie"]},{"n":"Watch a movie","c":"entertainment","m":["energetic","social"],"ct":"medium","e":"low","io":"indoor","gmax":8,"v":["Sampige Theatre","Inox Cinemas"]},{"n":"Go bowling","c":"entertainment","m":["competitive","energetic","social"],"ct":"medium","e":"high","io":"indoor","gmax":8,"v":["Ameoba Bowling Alley","Bluo"]},{"n":"Play at an arcade","c":"entertainment","m":["competitive","energetic","social"],"ct":"medium","e":"high","io":"indoor","gmax":8,"v":["Amoeba","Funtura"]},{"n":"Try an escape room","c":"entertainment","m":["competitive","energetic","social"],"ct":"medium","e":"high","io":"indoor","gmax":8,"v":["The Amazing Escape","Mystery Rooms"]},{"n":"Visit a museum","c":"arts_culture","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":8,"v":["Rezwan Razack Museum of Indian Paper Money","Vimor Museum of Living Textiles"]},{"n":"Visit an art gallery","c":"arts_culture","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":8,"v":["Sree Balaji Art Gallery","Apaulogy"]},{"n":"Catch a show at an arts centre","c":"arts_culture","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":8,"v":["Goethe-Institut Max M\u00fcller Bhavan","Arty Facets"]},{"n":"Go shopping at a mall","c":"shopping","m":["energetic","social"],"ct":"medium","e":"medium","io":"indoor","gmax":8,"v":["Gem Plaza","Manokamana Cermanic"]},{"n":"Relax at a park","c":"outdoor","m":["adventurous","relaxed"],"ct":"low","e":"low","io":"outdoor","gmax":8,"v":["Bird and Rabbit park","BBMP Park, Swimming Pool Extension"]},{"n":"Walk through a garden","c":"outdoor","m":["adventurous","relaxed"],"ct":"low","e":"low","io":"outdoor","gmax":8,"v":["Medicinal Plant Garden","Kaikondrahalli Butterfly Garden"]},{"n":"Fitness / yoga session","c":"wellness","m":["energetic","reflective","relaxed"],"ct":"medium","e":"high","io":"indoor","gmax":4,"v":["Body & Soul Gym","Mega Gym"]},{"n":"Learn Express.js","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn to greet someone in a new language","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to play a new sport","c":"entertainment","m":["adventurous","energetic","social"],"ct":"low","e":"high","io":"indoor","gmax":1,"v":[]},{"n":"Text a friend you haven't talked to in a long time","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":2,"v":[]},{"n":"Learn a new programming language","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to fold a paper crane","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Find a DIY to do","c":"learning","m":["creative","reflective"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn about the Golden Ratio","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Volunteer at a local animal shelter","c":"community","m":["reflective","social"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Play a game of Monopoly","c":"social","m":["competitive","energetic","social"],"ct":"low","e":"high","io":"indoor","gmax":4,"v":[]},{"n":"Bake pastries for you and your neighbor","c":"food","m":["creative","relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Bake something you've never tried before","c":"food","m":["creative","relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Take your dog on a walk","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"outdoor","gmax":1,"v":[]},{"n":"Meditate for five minutes","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Start a book you've never gotten around to reading","c":"wellness","m":["creative","reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Take a caffeine nap","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Take a bubble bath","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go to a nail salon","c":"wellness","m":["reflective","relaxed"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Listen to your favorite album","c":"arts_culture","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn to play a new instrument","c":"arts_culture","m":["creative","reflective"],"ct":"high","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Teach your dog a new trick","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go swimming with a friend","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":2,"v":[]},{"n":"Go on a long drive with no music","c":"wellness","m":["creative","reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Watch a movie you'd never usually watch","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go see a movie in theaters with a few friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Draw and color a Mandala","c":"wellness","m":["creative","reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Pot some plants and put them around your house","c":"wellness","m":["reflective","relaxed"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Plan a vacation you've always wanted to take","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Take your cat on a walk","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"outdoor","gmax":1,"v":[]},{"n":"Have a football scrimmage with some friends","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":8,"v":[]},{"n":"Fill out a basketball bracket","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Play a game of tennis with a friend","c":"social","m":["competitive","energetic","social"],"ct":"low","e":"high","io":"indoor","gmax":2,"v":[]},{"n":"Catch up with a friend over a lunch date","c":"social","m":["romantic","social"],"ct":"low","e":"medium","io":"indoor","gmax":2,"v":[]},{"n":"Learn how to iceskate or rollerskate","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go to a concert with local artists with some friends","c":"social","m":["creative","reflective","social"],"ct":"medium","e":"medium","io":"indoor","gmax":3,"v":[]},{"n":"Explore the nightlife of your city","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Fix something that's broken in your house","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Find a charity and donate to it","c":"community","m":["reflective","social"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Hold a yard sale","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Donate blood at a local blood center","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Volunteer and help out at a senior center","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Shop at support your local farmers market","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn a new recipe","c":"food","m":["creative","relaxed","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Create a cookbook with your favorite recipes","c":"food","m":["creative","relaxed","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Create a compost pile","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Volunteer at your local food bank","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Paint the first thing you see","c":"entertainment","m":["creative","energetic","social"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Start a blog for something you're passionate about","c":"entertainment","m":["creative","energetic","reflective","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Start a garden","c":"entertainment","m":["creative","energetic","reflective","social"],"ct":"medium","e":"medium","io":"outdoor","gmax":1,"v":[]},{"n":"Clean out your closet and donate the clothes you've outgrown","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Catch up on world news","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Create a personal website","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Listen to a new podcast","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Have a paper airplane contest with some friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Learn calligraphy","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Start a collection","c":"entertainment","m":["creative","energetic","reflective","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go to a local thrift shop","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Make a couch fort","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Pick up litter around your favorite park","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"outdoor","gmax":1,"v":[]},{"n":"Buy a new house decoration","c":"entertainment","m":["energetic","social"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Write a thank you letter to an influential person in your life","c":"social","m":["creative","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Write a short story","c":"entertainment","m":["creative","energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Do something nice for someone you care about","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Think of a new business idea","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn to sew on a button","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to french braid hair","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to whistle with your fingers","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn to write with your nondominant hand","c":"entertainment","m":["creative","energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Make bread from scratch","c":"food","m":["creative","relaxed","social"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to write in shorthand","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Make a simple musical instrument","c":"arts_culture","m":["creative","reflective"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Go to the gym","c":"entertainment","m":["energetic","social"],"ct":"low","e":"high","io":"indoor","gmax":1,"v":[]},{"n":"Try a food you don't like","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Conquer one of your fears","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go to a concert with some friends","c":"social","m":["social"],"ct":"high","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Go to the library and find an interesting book","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go to an escape room","c":"social","m":["competitive","energetic","social"],"ct":"medium","e":"high","io":"indoor","gmax":4,"v":[]},{"n":"Go to a karaoke bar with some friends","c":"social","m":["social"],"ct":"medium","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Repaint a room in your house","c":"entertainment","m":["creative","energetic","social"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Pull a harmless prank on one of your friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Take a spontaneous road trip with some friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Go stargazing","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Invite some friends over for a game night","c":"social","m":["competitive","energetic","social"],"ct":"free","e":"high","io":"indoor","gmax":4,"v":[]},{"n":"Make homemade ice cream","c":"food","m":["creative","relaxed","social"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Start a daily journal","c":"wellness","m":["creative","reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Go to a music festival with some friends","c":"social","m":["creative","social"],"ct":"medium","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Binge watch a trending series","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to make a website","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Watch a classic movie","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Plan a trip to another country","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn how the internet works","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Take a hike at a local park","c":"entertainment","m":["adventurous","energetic","social"],"ct":"free","e":"high","io":"outdoor","gmax":1,"v":[]},{"n":"Make tie dye shirts","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Make a scrapbook with pictures of your favorite memories","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Have a picnic with some friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":3,"v":[]},{"n":"Have a bonfire with your close friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Memorize the fifty states and their capitals","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Take a class at your local community center that interests you","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Make a new friend","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn origami","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to use a french press","c":"entertainment","m":["energetic","social"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Read a formal research paper on an interesting subject","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Listen to a new music genre","c":"arts_culture","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Volunteer at your local food pantry","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to make an Alexa skill","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Surprise your significant other with something considerate","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn Kotlin","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Go for a run","c":"entertainment","m":["adventurous","energetic","social"],"ct":"free","e":"high","io":"outdoor","gmax":1,"v":[]},{"n":"Learn woodworking","c":"learning","m":["creative","reflective"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Start a band","c":"arts_culture","m":["creative","reflective"],"ct":"medium","e":"low","io":"indoor","gmax":4,"v":[]},{"n":"Cook something together with someone","c":"food","m":["creative","relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":2,"v":[]},{"n":"Have a jam session with your friends","c":"arts_culture","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":5,"v":[]},{"n":"Learn GraphQL","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Play basketball with a group of friends","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":5,"v":[]},{"n":"Learn the Chinese erhu","c":"arts_culture","m":["creative","reflective"],"ct":"high","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Start a webinar on a topic of your choice","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to use an Arduino","c":"learning","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Go see a Broadway production","c":"entertainment","m":["energetic","social"],"ct":"high","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Learn Javascript","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Visit your past teachers","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Research a topic you're interested in","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Listen to music you haven't heard in a while","c":"arts_culture","m":["creative","reflective"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Go on a fishing trip with some friends","c":"social","m":["social"],"ct":"medium","e":"medium","io":"indoor","gmax":3,"v":[]},{"n":"Bake a pie with some friends","c":"food","m":["creative","relaxed","social"],"ct":"medium","e":"low","io":"indoor","gmax":3,"v":[]},{"n":"Do yoga","c":"entertainment","m":["energetic","reflective","relaxed","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Visit a nearby museum","c":"entertainment","m":["creative","energetic","reflective","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Have a photo session with some friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Watch the sunset or the sunrise","c":"entertainment","m":["energetic","romantic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Play a volleyball match with some friends","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":4,"v":[]},{"n":"Host a movie marathon with some friends","c":"social","m":["social"],"ct":"low","e":"medium","io":"indoor","gmax":3,"v":[]},{"n":"Hold a video game tournament with some friends","c":"social","m":["competitive","energetic","social"],"ct":"free","e":"high","io":"indoor","gmax":4,"v":[]},{"n":"Write a poem","c":"entertainment","m":["creative","energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Take a nap","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Practice coding in your favorite lanaguage","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Write a song","c":"arts_culture","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Play a video game","c":"entertainment","m":["competitive","energetic","social"],"ct":"free","e":"high","io":"indoor","gmax":1,"v":[]},{"n":"Study a foreign language","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn the NATO phonetic alphabet","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Solve a Rubik's cube","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Make your own LEGO creation","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Plant a tree","c":"entertainment","m":["energetic","social"],"ct":"medium","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Contribute code or a monetary donation to an open-source software project","c":"community","m":["reflective","social"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Prepare a dish from a foreign culture","c":"food","m":["creative","relaxed","social"],"ct":"low","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Patronize a local independent restaurant","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Give your pet ten minutes of focused attention","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Explore a park you have never been to before","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"outdoor","gmax":1,"v":[]},{"n":"Create a meal plan for the coming week","c":"food","m":["creative","relaxed","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Watch a Khan Academy lecture on a subject of your choosing","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn about a distributed version control system such as Git","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Write a note of appreciation to someone","c":"social","m":["creative","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Draw something interesting","c":"entertainment","m":["creative","energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn and play a new card game","c":"entertainment","m":["competitive","energetic","social"],"ct":"free","e":"high","io":"indoor","gmax":1,"v":[]},{"n":"Write a list of things you are grateful for","c":"wellness","m":["creative","reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn Morse code","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Go for a walk","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"outdoor","gmax":1,"v":[]},{"n":"Mow your neighbor's lawn","c":"community","m":["reflective","social"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Compliment someone","c":"social","m":["social"],"ct":"free","e":"medium","io":"indoor","gmax":2,"v":[]},{"n":"Color","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Memorize a favorite quote or poem","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Do something you used to do as a kid","c":"wellness","m":["reflective","relaxed"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Sit in the dark and listen to your favorite music with no distractions","c":"wellness","m":["creative","reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Do a jigsaw puzzle","c":"entertainment","m":["energetic","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Look at pictures and videos of cute animals","c":"wellness","m":["reflective","relaxed"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Write a handwritten letter to somebody","c":"social","m":["creative","social"],"ct":"low","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Start a family tree","c":"social","m":["creative","reflective","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]},{"n":"Learn the periodic table","c":"learning","m":["creative","reflective"],"ct":"free","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Donate to your local food bank","c":"community","m":["reflective","social"],"ct":"medium","e":"low","io":"indoor","gmax":1,"v":[]},{"n":"Learn how to beatbox","c":"entertainment","m":["energetic","social"],"ct":"free","e":"medium","io":"indoor","gmax":1,"v":[]}];
+const MOODS = ['relaxed','energetic','social','adventurous','creative','competitive','romantic','reflective'];
+const CATS = [...new Set(ACTIVITIES.map(a=>a.c))].sort();
+const COST_LABEL = {free:'Free',low:'Low',medium:'Medium',high:'High',premium:'Premium'};
+const COST_RANK = {free:0,low:1,medium:2,high:3,premium:4,unknown:2};
+
+let mode = 'solo';
+let soloMoods = new Set();
+let soloCats = new Set();
+let members = [{name:'You', moods:new Set()}];
+let currentStrategy = 'average';
+let lastGroupResult = null;
+
+function chip(label, on, onClick){
+  const b = document.createElement('button');
+  b.className = 'chip' + (on?' on':'');
+  b.textContent = label;
+  b.onclick = onClick;
+  return b;
+}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1).replace(/_/g,' '); }
+
+function renderSoloChips(){
+  const mc = document.getElementById('mood-chips'); mc.innerHTML='';
+  MOODS.forEach(m => mc.appendChild(chip(cap(m), soloMoods.has(m), ()=>{
+    soloMoods.has(m) ? soloMoods.delete(m) : soloMoods.add(m); renderSoloChips();
+  })));
+  const cc = document.getElementById('cat-chips'); cc.innerHTML='';
+  CATS.forEach(c => cc.appendChild(chip(cap(c), soloCats.has(c), ()=>{
+    soloCats.has(c) ? soloCats.delete(c) : soloCats.add(c); renderSoloChips();
+  })));
+}
+
+function renderMembers(){
+  const wrap = document.getElementById('members'); wrap.innerHTML='';
+  members.forEach((mem,i) => {
+    const div = document.createElement('div'); div.className='member';
+    const head = document.createElement('div'); head.className='member-head';
+    const inp = document.createElement('input'); inp.value = mem.name;
+    inp.oninput = e => mem.name = e.target.value;
+    head.appendChild(inp);
+    if(members.length>1){
+      const rm = document.createElement('button'); rm.className='rm'; rm.textContent='×';
+      rm.onclick = ()=>{ members.splice(i,1); renderMembers(); };
+      head.appendChild(rm);
+    }
+    div.appendChild(head);
+    const chips = document.createElement('div'); chips.className='chips';
+    MOODS.forEach(m => chips.appendChild(chip(cap(m), mem.moods.has(m), ()=>{
+      mem.moods.has(m) ? mem.moods.delete(m) : mem.moods.add(m); renderMembers();
+    })));
+    div.appendChild(chips);
+    wrap.appendChild(div);
+  });
+}
+
+function scoreActivity(a, moodSet, catSet){
+  let score = 0;
+  if(moodSet.size){
+    const overlap = a.m.filter(m=>moodSet.has(m)).length;
+    score += overlap / Math.max(moodSet.size,1);
+  }
+  if(catSet && catSet.size && catSet.has(a.c)) score += 0.5;
+  return score;
+}
+
+function filterPool(budgetRank, groupSize){
+  return ACTIVITIES.filter(a => COST_RANK[a.ct] <= budgetRank && a.gmax >= groupSize);
+}
+
+function card(a, extraHtml){
+  const venues = a.v.length ? `<div class="venues">e.g. <b>${a.v.join('</b>, <b>')}</b></div>` : '';
+  return `<div class="card">
+    <div class="cat">${cap(a.c)}</div>
+    <h3>${a.n}</h3>
+    <div class="meta">
+      <span class="tag">${COST_LABEL[a.ct]||a.ct}</span>
+      <span class="tag">${cap(a.e)} energy</span>
+      <span class="tag">${cap(a.io)}</span>
+    </div>
+    ${extraHtml||''}
+    ${venues}
+  </div>`;
+}
+
+function runSolo(){
+  document.getElementById('tabs-wrap').style.display='none';
+  const budgetRank = +document.getElementById('budget').value;
+  const gsize = +document.getElementById('groupsize').value || 1;
+  const pool = filterPool(budgetRank, gsize);
+  const scored = pool.map(a => ({a, s: scoreActivity(a, soloMoods, soloCats)}))
+    .sort((x,y)=>y.s-x.s).slice(0,8);
+  document.getElementById('res-title').textContent = soloMoods.size ? 'Top matches for you' : 'Showing top options (pick a mood to personalize)';
+  document.getElementById('res-sub').textContent = `${pool.length} activities fit your budget and group size — ranked by mood/interest match.`;
+  const results = document.getElementById('results');
+  if(!scored.length){ results.innerHTML = '<div class="empty">Nothing fits those filters — try a higher budget.</div>'; return; }
+  results.innerHTML = `<div class="cards">${scored.map(x=>card(x.a)).join('')}</div>`;
+}
+
+function aggregate(strategy, table, memberNames){
+  return table.map(row => {
+    const vals = memberNames.map(n=>row.scores[n]);
+    let agg;
+    if(strategy==='average') agg = vals.reduce((a,b)=>a+b,0)/vals.length;
+    else if(strategy==='least_misery') agg = Math.min(...vals);
+    else agg = null; // borda computed separately below
+    return {...row, agg};
+  });
+}
+
+function runGroup(){
+  document.getElementById('tabs-wrap').style.display='flex';
+  const budgetRank = +document.getElementById('budget').value;
+  const gsize = +document.getElementById('groupsize').value || members.length;
+  const pool = filterPool(budgetRank, gsize);
+  const names = members.map(m=>m.name||'Member');
+  const table = pool.map(a => {
+    const scores = {};
+    members.forEach((m,i)=>{ scores[names[i]] = scoreActivity(a, m.moods, null); });
+    return {a, scores};
+  });
+
+  // borda: rank per member, points = n-1-rank
+  const n = table.length;
+  const bordaPoints = names.map(()=>new Array(n).fill(0));
+  names.forEach((name,mi)=>{
+    const order = table.map((row,idx)=>({idx,v:row.scores[name]})).sort((x,y)=>y.v-x.v);
+    order.forEach((o,rank)=>{ bordaPoints[mi][o.idx] = n-1-rank; });
+  });
+  table.forEach((row,idx)=>{ row.borda = names.reduce((sum,name,mi)=>sum+bordaPoints[mi][idx],0); });
+
+  lastGroupResult = {table, names};
+  renderGroupResults();
+}
+
+function renderGroupResults(){
+  if(!lastGroupResult) return;
+  const {table, names} = lastGroupResult;
+  let ranked;
+  if(currentStrategy==='borda') ranked = [...table].sort((x,y)=>y.borda-x.borda);
+  else if(currentStrategy==='least_misery') ranked = [...table].sort((x,y)=>Math.min(...names.map(n=>y.scores[n]))-Math.min(...names.map(n=>x.scores[n])));
+  else ranked = [...table].sort((x,y)=>{
+    const avgY = names.reduce((s,n)=>s+y.scores[n],0)/names.length;
+    const avgX = names.reduce((s,n)=>s+x.scores[n],0)/names.length;
+    return avgY-avgX;
+  });
+  ranked = ranked.slice(0,6);
+  const labels = {average:'Average — best overall fit for the group',
+    least_misery:'Least Misery — nobody ends up unhappy',
+    borda:'Borda Count — rank-based group voting'};
+  document.getElementById('res-title').textContent = labels[currentStrategy];
+  document.getElementById('res-sub').textContent = `${table.length} activities fit the shared budget and group size, scored against ${names.length} member${names.length>1?'s':''}.`;
+  const results = document.getElementById('results');
+  if(!ranked.length){ results.innerHTML = '<div class="empty">Nothing fits those filters — try a higher budget.</div>'; return; }
+  results.innerHTML = `<div class="cards">${ranked.map(row=>{
+    const maxScore = Math.max(...names.map(n=>row.scores[n]), 0.001);
+    const bars = names.map(n=>`<div class="bar-row"><span class="name">${n}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max((row.scores[n]/maxScore*100),3)}%"></div></div></div>`).join('');
+    return card(row.a, `<div class="bars">${bars}</div>`);
+  }).join('')}</div>`;
+}
+
+document.getElementById('mode-solo').onclick = ()=>{
+  mode='solo';
+  document.getElementById('mode-solo').classList.add('active');
+  document.getElementById('mode-group').classList.remove('active');
+  document.getElementById('mood-field').style.display='block';
+  document.getElementById('members-field').style.display='none';
+  renderSoloChips();
+};
+document.getElementById('mode-group').onclick = ()=>{
+  mode='group';
+  document.getElementById('mode-group').classList.add('active');
+  document.getElementById('mode-solo').classList.remove('active');
+  document.getElementById('mood-field').style.display='none';
+  document.getElementById('members-field').style.display='block';
+  renderMembers();
+};
+document.getElementById('add-member').onclick = ()=>{
+  members.push({name:'Member '+(members.length+1), moods:new Set()});
+  renderMembers();
+};
+document.getElementById('go').onclick = ()=>{ mode==='solo' ? runSolo() : runGroup(); };
+document.querySelectorAll('#tabs-wrap button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#tabs-wrap button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentStrategy = b.dataset.strat;
+    renderGroupResults();
+  };
+});
+
+renderSoloChips();
+
+// Asynchronous health indicator probe
+fetch('/health')
+  .then(res => res.json())
+  .then(data => {
+    const pill = document.getElementById('health-pill');
+    if (pill && data.status === 'UP') {
+      pill.textContent = `● Health: UP (${data.version})`;
+      pill.style.background = 'rgba(79,169,140,0.2)';
+      pill.style.borderColor = 'var(--accent2)';
+    }
+  })
+  .catch(() => {
+    const pill = document.getElementById('health-pill');
+    if (pill) {
+      pill.textContent = '● Health: Standalone/Client';
+    }
+  });
+</script>
+</body>
+</html>

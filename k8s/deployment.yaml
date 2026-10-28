@@ -5,7 +5,7 @@ metadata:
   labels:
     app: hangout-recommender
     tier: backend
-    version: v1.0.0
+    version: v1.1.0
 spec:
   replicas: 2
   strategy:

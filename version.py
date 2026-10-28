@@ -1,5 +1,5 @@
 # Application Version Metadata
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 APP_NAME = "Bangalore Hangout Recommender"
 SERVICE_NAME = "bangalore-hangout-recommender"
 ENVIRONMENT = "production"
